@@ -8,6 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,14 +21,15 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mQueueRecycler;
-    private Button mQueueButton, mEnqueueButton;
-    private TextView mFrontText, mDequeuedText;
+    private Type selectType;
+    private Button mDequeueButton, mEnqueueButton;
+    private TextView mFrontText, mDequeuedText, mSizeText;
+    private EditText mEnqueueInput;
     private QueueListAdapter mAdapter;
     private ArrayQueue<Object> queue;
 
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         startToolbar();
         startComponents();
         actionComponents();
+        newQueue();
     }
 
     private void startToolbar() {
@@ -48,33 +53,48 @@ public class MainActivity extends AppCompatActivity {
     private void startComponents() {
         mQueueRecycler = (RecyclerView) findViewById(R.id.queue_recycler);
 
-        mQueueButton = (Button) findViewById(R.id.queue_button);
+        mDequeueButton = (Button) findViewById(R.id.dequeue_button);
         mEnqueueButton = (Button) findViewById(R.id.enqueue_button);
 
+        mEnqueueInput = (EditText) findViewById(R.id.enqueue_input);
+
         mFrontText = (TextView) findViewById(R.id.front_text);
+        mSizeText = (TextView) findViewById(R.id.size_text);
         mDequeuedText = (TextView) findViewById(R.id.dequeued_text);
     }
 
     private void actionComponents() {
-        mQueueButton.setOnClickListener(new View.OnClickListener() {
+        mDequeueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Object dequeue = queue.dequeue();
+                mDequeuedText.setText(String.valueOf(dequeue).toLowerCase());
+                refreshRecyclerView();
             }
         });
 
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (TextUtils.isEmpty(mEnqueueInput.getText())) {
+                    queue.enqueue(getRandomValue());
+                } else {
+                    if (selectType.equals(Integer.TYPE)) {
+                        queue.enqueue(Integer.parseInt(mEnqueueInput.getText().toString()));
+                    } else {
+                        queue.enqueue(mEnqueueInput.getText().toString());
+                    }
+                }
+                refreshRecyclerView();
+                mEnqueueInput.setText("");
             }
         });
 
     }
 
-    private void updateAdapter() {
-
-
+    private void refreshRecyclerView() {
+        mSizeText.setText(String.valueOf(queue.getSize()));
+        mAdapter.swap(queue.getQueueAsQueueItens());
     }
 
     @Override
@@ -93,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private Object getRandomValue() {
+        Random random = new Random();
+        return selectType.equals(Integer.TYPE) ? ((char) (random.nextInt(26) + 'a')) : random.nextInt(999);
+    }
+
     private void newQueue() {
 
         LayoutInflater inflater = getLayoutInflater();
@@ -100,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.new_queue_layout, null);
 
         final RadioButton charRadio = view.findViewById(R.id.char_radio);
-        final RadioButton intRadio = view.findViewById(R.id.int_radio);
 
         final EditText sizeText = view.findViewById(R.id.queue_size);
 
@@ -108,22 +132,20 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-                Type type;
                 if (charRadio.isChecked()) {
-                    type = Character.TYPE;
+                    selectType = Character.TYPE;
                 } else {
-                    type = Integer.TYPE;
+                    selectType = Integer.TYPE;
                 }
 
                 int size = sizeText.getText().toString().equals("") ? 5 : Integer.parseInt(sizeText.getText().toString());
 
-                createList(type, size);
+                createList(size);
             }
         });
 
         builder.setNegativeButton("Cancelar", null);
-
+        builder.setTitle("Nova Fila");
         builder.setView(view);
         builder.setCancelable(true);
 
@@ -132,14 +154,18 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void createList(Type type, int listSize) {
+    private void createList(int listSize) {
+        mFrontText.setText(selectType == Integer.TYPE ? "0" : "NULL");
+
+        if (Integer.TYPE.equals(selectType)) {
+            mEnqueueInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        } else {
+            mEnqueueInput.setInputType(InputType.TYPE_CLASS_TEXT);
+            mEnqueueInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
+        }
+        mDequeuedText.setText("");
         queue = new ArrayQueue<>(listSize);
-
-        queue.enqueue(1);
-        queue.enqueue(2);
-        queue.enqueue(3);
-
-        mAdapter = new QueueListAdapter(this, Arrays.asList(queue.getArray()), type);
+        mAdapter = new QueueListAdapter(this, queue.getQueueAsQueueItens(), selectType);
         mQueueRecycler.setAdapter(mAdapter);
     }
 

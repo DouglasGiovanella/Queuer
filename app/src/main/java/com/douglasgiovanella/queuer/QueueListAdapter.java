@@ -1,7 +1,6 @@
 package com.douglasgiovanella.queuer;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,17 +15,16 @@ import java.util.List;
  * Created by Douglas Giovanella on 27/06/2017.
  */
 
-public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQueue> {
+class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQueue> {
 
-    private List<Object> mList;
+    private List<QueueItem> mList;
     private Context mContext;
     private Type type;
-    private int currentHeadPosition, currentTailPosition;
 
-    public QueueListAdapter(Context mContext, List<Object> objects, Type type) {
+    QueueListAdapter(Context mContext, List<QueueItem> objects, Type type) {
         this.mContext = mContext;
-        mList = objects;
         this.type = type;
+        mList = objects;
     }
 
     @Override
@@ -38,36 +36,26 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolderQueue holder, int position) {
-        if (mList.get(position) != null) {
-            holder.value.setText(mList.get(position).toString());
+        if (mList.get(position).getValue() != null) {
+            holder.value.setText(mList.get(position).getValue().toString());
         } else {
-            if (type.equals(Character.TYPE)) {
-                holder.value.setText(" ");
-            } else {
-                holder.value.setText("0");
-            }
+            holder.value.setText("null");
         }
 
-        if(currentHeadPosition == currentTailPosition && currentHeadPosition == position){
-
-        }
-
-        if (position == currentHeadPosition) {
+        if (mList.get(position).isHead() && mList.get(position).isTail()) {
+            holder.valueType.setText("HEAD/TAIL");
+        } else if (mList.get(position).isHead()) {
             holder.valueType.setText("HEAD");
-        }else{
-            if(position == currentTailPosition){
-                holder.valueType.setText("TAIL");
-            }
+        } else if (mList.get(position).isTail()) {
+            holder.valueType.setText("TAIL");
+        } else {
+            holder.valueType.setText("");
         }
+
     }
 
-    public void swap(List<Object> list) {
-        if (mList != null) {
-            mList.clear();
-            mList.addAll(list);
-        } else {
-            mList = list;
-        }
+    void swap(List<QueueItem> list) {
+        mList = list;
         notifyDataSetChanged();
     }
 
@@ -78,8 +66,8 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     class ViewHolderQueue extends RecyclerView.ViewHolder {
 
-        public final TextView value, valueType;
-        public final CardView mCardView;
+        TextView value, valueType;
+        CardView mCardView;
 
         ViewHolderQueue(View itemView) {
             super(itemView);

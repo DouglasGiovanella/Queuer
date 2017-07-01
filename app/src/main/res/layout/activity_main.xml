@@ -23,7 +23,6 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -31,47 +30,51 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/enqueue_button"
-                style="@android:style/Widget.Button.Small"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#383636"
-                android:text="queue.enqueue();"
-                android:textColor="#FFF" />
+                android:orientation="vertical">
 
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
+                <EditText
+                    android:id="@+id/enqueue_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:hint="\???"
+                    android:inputType="number" />
 
-            <Button
-                android:id="@+id/queue_button"
-                style="@android:style/Widget.Button.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#383636"
-                android:text="queue.dequeue();"
-                android:textColor="#FFF" />
+                <Button
+                    android:id="@+id/enqueue_button"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#383636"
+                    android:text="queue.enqueue();"
+                    android:textColor="#FFF" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:gravity="center"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    android:text="Front" />
+                    android:text="Size"
+                    android:textAlignment="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,10 +82,9 @@
                     android:background="@drawable/border">
 
                     <TextView
-                        android:id="@+id/front_text"
+                        android:id="@+id/size_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="5"
                         android:textAlignment="center"
                         android:textSize="40dp" />
 
@@ -95,15 +97,48 @@
                 android:layout_height="match_parent" />
 
             <LinearLayout
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    android:text="Dequeued" />
+                    android:text="Front"
+                    android:textAlignment="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border">
+
+                    <TextView
+                        android:id="@+id/front_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAlignment="center"
+                        android:textSize="40dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:text="Dequeued"
+                    android:textAlignment="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -114,7 +149,6 @@
                         android:id="@+id/dequeued_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="5"
                         android:textAlignment="center"
                         android:textSize="40dp" />
 
@@ -126,6 +160,13 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#050404">
+
+    </View>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -134,13 +175,23 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/queue_recycler"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="50dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/dequeue_button"
+        style="@android:style/Widget.Button.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#383636"
+        android:text="queue.dequeue();"
+        android:textColor="#FFF" />
 
 </LinearLayout>

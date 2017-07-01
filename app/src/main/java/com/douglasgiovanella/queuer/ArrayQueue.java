@@ -1,6 +1,8 @@
 package com.douglasgiovanella.queuer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Douglas Giovanella on 27/06/2017.
@@ -85,15 +87,33 @@ public class ArrayQueue<T> implements Queue<T> {
         return map;
     }
 
-    public T[] getArray(){
+    T[] getArray() {
         return array;
     }
 
-    public int getHead(){
-        return head;
+
+    private boolean isHead(int position) {
+        return position == head;
     }
 
-    public int getTail(){
-        return tail;
+    private boolean isTail(int position) {
+        return position == tail;
     }
+
+    List<QueueItem> getQueueAsQueueItens() {
+
+        List<QueueItem> tmp = new ArrayList<>();
+        QueueItem qItem;
+
+        for (int i = 0; i < array.length; i++) {
+            qItem = new QueueItem();
+            qItem.setValue(array[i]);
+            qItem.setHead(isHead(i));
+            qItem.setTail(isTail(i));
+            tmp.add(qItem);
+        }
+
+        return tmp;
+    }
+
 }

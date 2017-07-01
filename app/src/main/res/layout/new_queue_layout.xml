@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
 
     <TextView
@@ -18,8 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="100dp"
-        android:inputType="number"
-        android:layout_marginRight="100dp" />
+        android:layout_marginRight="100dp"
+        android:hint="5"
+        android:inputType="number" />
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -36,6 +37,7 @@
             android:id="@+id/int_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="Integer" />
 
     </RadioGroup>
