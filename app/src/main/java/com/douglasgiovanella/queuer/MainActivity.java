@@ -2,6 +2,7 @@ package com.douglasgiovanella.queuer;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -15,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mQueueRecycler;
     private Type selectType;
+    private AlertDialog gigiDialog;
+    private MediaPlayer mMediaPlayer;
     private Button mDequeueButton, mEnqueueButton;
     private TextView mFrontText, mDequeuedText, mSizeText;
     private EditText mEnqueueInput;
@@ -49,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
     }
 
-
     private void startComponents() {
         mQueueRecycler = (RecyclerView) findViewById(R.id.queue_recycler);
 
@@ -67,34 +71,52 @@ public class MainActivity extends AppCompatActivity {
         mDequeueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Object dequeue = queue.dequeue();
-                mDequeuedText.setText(String.valueOf(dequeue).toLowerCase());
-                refreshRecyclerView();
+                if (queue != null) {
+                    Object dequeue = queue.dequeue();
+                    mDequeuedText.setText(String.valueOf(dequeue).toLowerCase());
+                    refreshRecyclerView();
+                }
             }
         });
 
         mEnqueueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(mEnqueueInput.getText())) {
-                    queue.enqueue(getRandomValue());
-                } else {
-                    if (selectType.equals(Integer.TYPE)) {
-                        queue.enqueue(Integer.parseInt(mEnqueueInput.getText().toString()));
+                if (queue != null) {
+                    if (TextUtils.isEmpty(mEnqueueInput.getText())) {
+                        queue.enqueue(selectType.equals(Character.TYPE) ? getRandomChar() : getRandomInt());
                     } else {
-                        queue.enqueue(mEnqueueInput.getText().toString());
+                        queue.enqueue(mEnqueueInput.getText().toString().charAt(0));
+                    }
+                    refreshRecyclerView();
+                    mEnqueueInput.setText("");
+
+                    if (selectType.equals(Character.TYPE)) {
+                        String tmp = getStringFromQueueArray().toUpperCase();
+                        if (tmp.contains("GIGI")) {
+                            playGigi();
+                        }
                     }
                 }
-                refreshRecyclerView();
-                mEnqueueInput.setText("");
             }
         });
 
     }
 
     private void refreshRecyclerView() {
+        mFrontText.setText(String.valueOf(queue.front()).toLowerCase());
         mSizeText.setText(String.valueOf(queue.getSize()));
-        mAdapter.swap(queue.getQueueAsQueueItens());
+        mAdapter.swap(queue.getQueueAsQueueItems());
+    }
+
+    private String getStringFromQueueArray() {
+        char[] tmp = new char[queue.getArray().length];
+        for (int i = 0; i < queue.getArray().length; i++) {
+            if (queue.getArray()[i] != null) {
+                tmp[i] = (char) queue.getArray()[i];
+            }
+        }
+        return new String(tmp);
     }
 
     @Override
@@ -113,9 +135,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Object getRandomValue() {
-        Random random = new Random();
-        return selectType.equals(Integer.TYPE) ? ((char) (random.nextInt(26) + 'a')) : random.nextInt(999);
+    private Object getRandomInt() {
+        return new Random().nextInt(999);
+    }
+
+    private Character getRandomChar() {
+        return ((char) (new Random().nextInt(26) + 'a'));
     }
 
     private void newQueue() {
@@ -155,18 +180,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createList(int listSize) {
-        mFrontText.setText(selectType == Integer.TYPE ? "0" : "NULL");
-
+        mFrontText.setText("null");
+        mSizeText.setText("0");
+        mDequeuedText.setText("");
         if (Integer.TYPE.equals(selectType)) {
             mEnqueueInput.setInputType(InputType.TYPE_CLASS_NUMBER);
         } else {
             mEnqueueInput.setInputType(InputType.TYPE_CLASS_TEXT);
             mEnqueueInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
         }
-        mDequeuedText.setText("");
         queue = new ArrayQueue<>(listSize);
-        mAdapter = new QueueListAdapter(this, queue.getQueueAsQueueItens(), selectType);
+        mAdapter = new QueueListAdapter(queue.getQueueAsQueueItems());
         mQueueRecycler.setAdapter(mAdapter);
     }
 
+    private void playGigi() {
+        showDancing();
+        mMediaPlayer = MediaPlayer.create(this, R.raw.gigi);
+        mMediaPlayer.start();
+    }
+
+    private void showDancing() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        WebView view = new WebView(this);
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        builder.setView(view);
+        gigiDialog = builder.create();
+        gigiDialog.show();
+        view.loadUrl("file:///android_asset/gigi.gif");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    //RODA RODA VIRA
+                    if (!gigiDialog.isShowing()) {
+                        mMediaPlayer.stop();
+                        break;
+                    }
+                }
+
+            }
+        }).start();
+
+    }
 }

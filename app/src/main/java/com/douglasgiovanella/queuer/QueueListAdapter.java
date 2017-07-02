@@ -1,14 +1,11 @@
 package com.douglasgiovanella.queuer;
 
-import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -18,12 +15,8 @@ import java.util.List;
 class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQueue> {
 
     private List<QueueItem> mList;
-    private Context mContext;
-    private Type type;
 
-    QueueListAdapter(Context mContext, List<QueueItem> objects, Type type) {
-        this.mContext = mContext;
-        this.type = type;
+    QueueListAdapter(List<QueueItem> objects) {
         mList = objects;
     }
 
@@ -67,13 +60,11 @@ class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQ
     class ViewHolderQueue extends RecyclerView.ViewHolder {
 
         TextView value, valueType;
-        CardView mCardView;
 
         ViewHolderQueue(View itemView) {
             super(itemView);
             value = itemView.findViewById(R.id.value_view_holder);
             valueType = itemView.findViewById(R.id.value_type_holder);
-            mCardView = itemView.findViewById(R.id.card_view);
         }
     }
 

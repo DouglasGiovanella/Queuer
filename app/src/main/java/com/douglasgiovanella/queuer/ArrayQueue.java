@@ -1,7 +1,6 @@
 package com.douglasgiovanella.queuer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -9,7 +8,7 @@ import java.util.List;
  */
 
 @SuppressWarnings("unchecked")
-public class ArrayQueue<T> implements Queue<T> {
+class ArrayQueue<T> implements Queue<T> {
 
     private T[] array;
 
@@ -23,7 +22,7 @@ public class ArrayQueue<T> implements Queue<T> {
         array = (T[]) new Object[20];
     }
 
-    public ArrayQueue(int size) {
+    ArrayQueue(int size) {
         array = (T[]) new Object[size];
     }
 
@@ -79,18 +78,9 @@ public class ArrayQueue<T> implements Queue<T> {
         return size;
     }
 
-    public HashMap<String, Object> getValues() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("head", head);
-        map.put("tail", tail);
-        map.put("array", array);
-        return map;
-    }
-
     T[] getArray() {
         return array;
     }
-
 
     private boolean isHead(int position) {
         return position == head;
@@ -100,7 +90,7 @@ public class ArrayQueue<T> implements Queue<T> {
         return position == tail;
     }
 
-    List<QueueItem> getQueueAsQueueItens() {
+    List<QueueItem> getQueueAsQueueItems() {
 
         List<QueueItem> tmp = new ArrayList<>();
         QueueItem qItem;

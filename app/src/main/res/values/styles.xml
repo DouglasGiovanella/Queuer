@@ -8,6 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:itemTextAppearance">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
-</style>
+    </style>
 
 </resources>
