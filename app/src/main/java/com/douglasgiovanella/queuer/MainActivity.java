@@ -198,6 +198,13 @@ public class MainActivity extends AppCompatActivity {
         showDancing();
         mMediaPlayer = MediaPlayer.create(this, R.raw.gigi);
         mMediaPlayer.start();
+
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                gigiDialog.dismiss();
+            }
+        });
     }
 
     private void showDancing() {
