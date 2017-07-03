@@ -1,4 +1,4 @@
-package com.douglasgiovanella.queuer;
+package com.douglasgiovanella.queuer.model;
 
 /**
  * Created by Douglas Giovanella on 01/07/2017.

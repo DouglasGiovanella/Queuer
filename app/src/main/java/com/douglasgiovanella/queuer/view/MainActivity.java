@@ -1,4 +1,4 @@
-package com.douglasgiovanella.queuer;
+package com.douglasgiovanella.queuer.view;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -22,6 +22,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.douglasgiovanella.queuer.R;
+import com.douglasgiovanella.queuer.queue.ArrayQueue;
+import com.douglasgiovanella.queuer.view.adapter.QueueListAdapter;
 
 import java.lang.reflect.Type;
 import java.util.Random;

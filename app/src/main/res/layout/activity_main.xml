@@ -7,7 +7,7 @@
     android:background="#BDBDBD"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.douglasgiovanella.queuer.MainActivity">
+    tools:context="com.douglasgiovanella.queuer.view.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_toolbar"

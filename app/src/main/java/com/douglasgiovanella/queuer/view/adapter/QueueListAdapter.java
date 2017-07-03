@@ -1,4 +1,4 @@
-package com.douglasgiovanella.queuer;
+package com.douglasgiovanella.queuer.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,17 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.douglasgiovanella.queuer.R;
+import com.douglasgiovanella.queuer.model.QueueItem;
+
 import java.util.List;
 
 /**
  * Created by Douglas Giovanella on 27/06/2017.
  */
 
-class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQueue> {
+public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQueue> {
 
     private List<QueueItem> mList;
 
-    QueueListAdapter(List<QueueItem> objects) {
+    public QueueListAdapter(List<QueueItem> objects) {
         mList = objects;
     }
 
@@ -47,7 +50,7 @@ class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolderQ
 
     }
 
-    void swap(List<QueueItem> list) {
+    public void swap(List<QueueItem> list) {
         mList = list;
         notifyDataSetChanged();
     }

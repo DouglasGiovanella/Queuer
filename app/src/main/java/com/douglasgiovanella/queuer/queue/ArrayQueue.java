@@ -1,4 +1,6 @@
-package com.douglasgiovanella.queuer;
+package com.douglasgiovanella.queuer.queue;
+
+import com.douglasgiovanella.queuer.model.QueueItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.List;
  */
 
 @SuppressWarnings("unchecked")
-class ArrayQueue<T> implements Queue<T> {
+public class ArrayQueue<T> implements Queue<T> {
 
     private T[] array;
 
@@ -22,7 +24,7 @@ class ArrayQueue<T> implements Queue<T> {
         array = (T[]) new Object[20];
     }
 
-    ArrayQueue(int size) {
+    public ArrayQueue(int size) {
         array = (T[]) new Object[size];
     }
 
@@ -78,7 +80,7 @@ class ArrayQueue<T> implements Queue<T> {
         return size;
     }
 
-    T[] getArray() {
+    public T[] getArray() {
         return array;
     }
 
@@ -90,7 +92,7 @@ class ArrayQueue<T> implements Queue<T> {
         return position == tail;
     }
 
-    List<QueueItem> getQueueAsQueueItems() {
+    public List<QueueItem> getQueueAsQueueItems() {
 
         List<QueueItem> tmp = new ArrayList<>();
         QueueItem qItem;
