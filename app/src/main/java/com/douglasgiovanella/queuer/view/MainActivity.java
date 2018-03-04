@@ -1,7 +1,6 @@
 package com.douglasgiovanella.queuer.view;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -53,53 +52,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startToolbar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar mToolbar = findViewById(R.id.main_toolbar);
         mToolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(mToolbar);
     }
 
     private void startComponents() {
-        mQueueRecycler = (RecyclerView) findViewById(R.id.queue_recycler);
+        mQueueRecycler = findViewById(R.id.queue_recycler);
 
-        mDequeueButton = (Button) findViewById(R.id.dequeue_button);
-        mEnqueueButton = (Button) findViewById(R.id.enqueue_button);
+        mDequeueButton = findViewById(R.id.dequeue_button);
+        mEnqueueButton = findViewById(R.id.enqueue_button);
 
-        mEnqueueInput = (EditText) findViewById(R.id.enqueue_input);
+        mEnqueueInput = findViewById(R.id.enqueue_input);
 
-        mFrontText = (TextView) findViewById(R.id.front_text);
-        mSizeText = (TextView) findViewById(R.id.size_text);
-        mDequeuedText = (TextView) findViewById(R.id.dequeued_text);
+        mFrontText = findViewById(R.id.front_text);
+        mSizeText = findViewById(R.id.size_text);
+        mDequeuedText = findViewById(R.id.dequeued_text);
     }
 
     private void actionComponents() {
-        mDequeueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (queue != null) {
-                    Object dequeue = queue.dequeue();
-                    mDequeuedText.setText(String.valueOf(dequeue).toLowerCase());
-                    refreshRecyclerView();
-                }
+        mDequeueButton.setOnClickListener(view -> {
+            if (queue != null) {
+                Object dequeue = queue.dequeue();
+                mDequeuedText.setText(String.valueOf(dequeue).toLowerCase());
+                refreshRecyclerView();
             }
         });
 
-        mEnqueueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (queue != null) {
-                    if (TextUtils.isEmpty(mEnqueueInput.getText())) {
-                        queue.enqueue(selectType.equals(Character.TYPE) ? getRandomChar() : getRandomInt());
-                    } else {
-                        queue.enqueue(mEnqueueInput.getText().toString().charAt(0));
-                    }
-                    refreshRecyclerView();
-                    mEnqueueInput.setText("");
+        mEnqueueButton.setOnClickListener(view -> {
+            if (queue != null) {
+                if (TextUtils.isEmpty(mEnqueueInput.getText())) {
+                    queue.enqueue(selectType.equals(Character.TYPE) ? getRandomChar() : getRandomInt());
+                } else {
+                    queue.enqueue(mEnqueueInput.getText().toString().charAt(0));
+                }
+                refreshRecyclerView();
+                mEnqueueInput.setText("");
 
-                    if (selectType.equals(Character.TYPE)) {
-                        String tmp = getStringFromQueueArray().toUpperCase();
-                        if (tmp.contains("GIGI")) {
-                            playGigi();
-                        }
+                if (selectType.equals(Character.TYPE)) {
+                    String tmp = getStringFromQueueArray().toUpperCase();
+                    if (tmp.contains("GIGI")) {
+                        playGigi();
                     }
                 }
             }
@@ -110,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshRecyclerView() {
         mFrontText.setText(String.valueOf(queue.front()).toLowerCase());
         mSizeText.setText(String.valueOf(queue.getSize()));
-        mAdapter.swap(queue.getQueueAsQueueItems());
+        mAdapter.swap(queue.getAsQueueItems());
     }
 
     private String getStringFromQueueArray() {
@@ -158,19 +151,16 @@ public class MainActivity extends AppCompatActivity {
         final EditText sizeText = view.findViewById(R.id.queue_size);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (charRadio.isChecked()) {
-                    selectType = Character.TYPE;
-                } else {
-                    selectType = Integer.TYPE;
-                }
-
-                int size = sizeText.getText().toString().equals("") ? 5 : Integer.parseInt(sizeText.getText().toString());
-
-                createList(size);
+        builder.setPositiveButton("Confirmar", (dialogInterface, i) -> {
+            if (charRadio.isChecked()) {
+                selectType = Character.TYPE;
+            } else {
+                selectType = Integer.TYPE;
             }
+
+            int size = sizeText.getText().toString().equals("") ? 5 : Integer.parseInt(sizeText.getText().toString());
+
+            createList(size);
         });
 
         builder.setNegativeButton("Cancelar", null);
@@ -194,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             mEnqueueInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
         }
         queue = new ArrayQueue<>(listSize);
-        mAdapter = new QueueListAdapter(queue.getQueueAsQueueItems());
+        mAdapter = new QueueListAdapter(queue.getAsQueueItems());
         mQueueRecycler.setAdapter(mAdapter);
     }
 
@@ -203,12 +193,7 @@ public class MainActivity extends AppCompatActivity {
         mMediaPlayer = MediaPlayer.create(this, R.raw.gigi);
         mMediaPlayer.start();
 
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                gigiDialog.dismiss();
-            }
-        });
+        mMediaPlayer.setOnCompletionListener(mediaPlayer -> gigiDialog.dismiss());
     }
 
     private void showDancing() {
@@ -220,19 +205,15 @@ public class MainActivity extends AppCompatActivity {
         gigiDialog.show();
         view.loadUrl("file:///android_asset/gigi.gif");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    //RODA RODA VIRA
-                    if (!gigiDialog.isShowing()) {
-                        mMediaPlayer.stop();
-                        break;
-                    }
+        new Thread(() -> {
+            while (true) {
+                //RODA RODA VIRA
+                if (!gigiDialog.isShowing()) {
+                    mMediaPlayer.stop();
+                    break;
                 }
-
             }
-        }).start();
 
+        }).start();
     }
 }

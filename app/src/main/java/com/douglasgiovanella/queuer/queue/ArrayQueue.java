@@ -92,20 +92,11 @@ public class ArrayQueue<T> implements Queue<T> {
         return position == tail;
     }
 
-    public List<QueueItem> getQueueAsQueueItems() {
-
+    public List<QueueItem> getAsQueueItems() {
         List<QueueItem> tmp = new ArrayList<>();
-        QueueItem qItem;
-
         for (int i = 0; i < array.length; i++) {
-            qItem = new QueueItem();
-            qItem.setValue(array[i]);
-            qItem.setHead(isHead(i));
-            qItem.setTail(isTail(i));
-            tmp.add(qItem);
+            tmp.add(new QueueItem(array[i], isHead(i), isTail(i)));
         }
-
         return tmp;
     }
-
 }

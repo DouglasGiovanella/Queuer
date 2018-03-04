@@ -9,6 +9,12 @@ public class QueueItem {
     private Object value;
     private boolean isHead, isTail;
 
+    public QueueItem(Object value, boolean isHead, boolean isTail) {
+        this.value = value;
+        this.isHead = isHead;
+        this.isTail = isTail;
+    }
+
     public Object getValue() {
         return value;
     }
