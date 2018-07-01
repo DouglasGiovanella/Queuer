@@ -33,7 +33,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderQueue holder, int position) {
-        holder.bind(mList.get(position));
+        holder.bindTo(mList.get(position));
     }
 
     public void swap(List<QueueItem> list) {
@@ -41,9 +41,17 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         notifyDataSetChanged();
     }
 
+    public List<QueueItem> getList() {
+        return mList;
+    }
+
     @Override
     public int getItemCount() {
         return mList.size();
+    }
+
+    public QueueItem getItem(int position) {
+        return mList.get(position);
     }
 
     class ViewHolderQueue extends RecyclerView.ViewHolder {
@@ -56,7 +64,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
             valueType = itemView.findViewById(R.id.value_type_holder);
         }
 
-        void bind(QueueItem item) {
+        void bindTo(QueueItem item) {
             if (item.getValue() != null) {
                 value.setText(item.getValue().toString());
             } else {

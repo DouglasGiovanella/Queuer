@@ -32,13 +32,13 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mQueueRecycler;
-    private Type selectType;
-    private AlertDialog gigiDialog;
-    private MediaPlayer mMediaPlayer;
+    public Type selectType;
+    public AlertDialog gigiDialog;
+    public MediaPlayer mMediaPlayer;
     private Button mDequeueButton, mEnqueueButton;
     private TextView mFrontText, mDequeuedText, mSizeText;
     private EditText mEnqueueInput;
-    private QueueListAdapter mAdapter;
+    public QueueListAdapter mAdapter;
     private ArrayQueue<Object> queue;
 
     @Override
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
             int size = sizeText.getText().toString().equals("") ? 5 : Integer.parseInt(sizeText.getText().toString());
 
-            createList(size);
+            initList(size);
         });
 
         builder.setNegativeButton("Cancelar", null);
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void createList(int listSize) {
+    public void initList(int listSize) {
         mFrontText.setText("null");
         mSizeText.setText("0");
         mDequeuedText.setText("");
@@ -190,10 +190,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void playGigi() {
         showDancing();
-        mMediaPlayer = MediaPlayer.create(this, R.raw.gigi);
-        mMediaPlayer.start();
+        mMediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.gigi);
 
-        mMediaPlayer.setOnCompletionListener(mediaPlayer -> gigiDialog.dismiss());
+        if (mMediaPlayer != null) {
+            mMediaPlayer.start();
+            mMediaPlayer.setOnCompletionListener(mediaPlayer -> gigiDialog.dismiss());
+        }
     }
 
     private void showDancing() {
